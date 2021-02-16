@@ -62,6 +62,8 @@ endif
 # process cpu flags
 include $(RTE_SDK)/mk/toolchain/$(RTE_TOOLCHAIN)/rte.toolchain-compat.mk
 
+# disable warning for non-initialised fields
+WERROR_FLAGS += -Wno-missing-field-initializers
 # workaround GCC bug with warning "missing initializer" for "= {0}"
 ifeq ($(shell test $(GCC_VERSION) -lt 47 && echo 1), 1)
 WERROR_FLAGS += -Wno-missing-field-initializers
@@ -71,12 +73,20 @@ ifeq ($(shell test $(GCC_VERSION) -lt 47 && echo 1), 1)
 WERROR_FLAGS += -Wno-uninitialized
 endif
 
+ifeq ($(shell test $(GCC_VERSION) -ge 100 && echo 1), 1)
+# FIXME: Bugzilla 396
+WERROR_FLAGS += -Wno-zero-length-bounds
+endif
+
 ifeq ($(shell test $(GCC_VERSION) -gt 70 && echo 1), 1)
 # Tell GCC only to error for switch fallthroughs without a suitable comment
 WERROR_FLAGS += -Wimplicit-fallthrough=2
 # Ignore errors for snprintf truncation
 WERROR_FLAGS += -Wno-format-truncation
 endif
+
+# disable packed member unalign warnings
+WERROR_FLAGS += -Wno-address-of-packed-member
 
 export CC AS AR LD OBJCOPY OBJDUMP STRIP READELF
 export TOOLCHAIN_CFLAGS TOOLCHAIN_LDFLAGS TOOLCHAIN_ASFLAGS

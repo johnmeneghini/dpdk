@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include <rte_string_fns.h>
 #include <rte_eal.h>
 #include <rte_log.h>
 #include <rte_lcore.h>
@@ -208,7 +209,7 @@ eal_plugin_add(const char *path)
 		return -1;
 	}
 	memset(solib, 0, sizeof(*solib));
-	strncpy(solib->name, path, PATH_MAX-1);
+	strlcpy(solib->name, path, PATH_MAX-1);
 	solib->name[PATH_MAX-1] = 0;
 	TAILQ_INSERT_TAIL(&solib_list, solib, next);
 
