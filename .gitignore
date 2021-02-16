@@ -13,3 +13,8 @@ GRTAGS
 tags
 TAGS
 /build/
+/bin/
+/include/
+/sbin/
+/share/
+/spdk-linuxapp-gcc/
